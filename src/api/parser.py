@@ -79,8 +79,7 @@ def parse_diary(js: Dict[str, Any]) -> Dict[str, Student]:
         result[student.name] = student
     return result
 
-def parse_vendors(js: Dict[str, Any]) -> List[Vendor]:
-    result: List[Vendor] = []
-    for e in js["result"]:
-        result.append(Vendor(**e))
-    return result
+def parse_vendors(js: Dict[str, Any]) -> Vendor | None:
+    if len(js["result"]) > 0:
+        return Vendor.model_validate(js["result"][0])
+    return None

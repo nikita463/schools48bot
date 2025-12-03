@@ -1,11 +1,49 @@
 services:
-  schools48bot:
-    image: xupdates/journal48telegrambot-app
-    container_name: schools48bot
+  schools48bot-db:
+    image: postgres:18-alpine
+    container_name: schools48bot-db
+    hostname: schools48bot-db
+    restart: always
     env_file:
       - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - TZ=Europe/Moscow
+    ports:
+      - "127.0.0.1:6432:5432"
+    networks:
+      - schools48bot-network
     volumes:
-      - ./.env:/app/.env
-      - data:/data
+      - schools48bot-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}' ]
+      interval: 3s
+      timeout: 10s
+      retries: 3
+
+  schools48bot:
+    image: xupdates/schools48bot:latest
+    container_name: schools48bot
+    hostname: schools48bot
+    restart: always
+    env_file:
+      - .env
+    networks:
+      - schools48bot-network
+    depends_on:
+      schools48bot-db:
+        condition: service_healthy
+
 volumes:
-  data:
+  schools48bot-db-data:
+    name: schools48bot-db-data
+    driver: local
+    external: false
+
+networks:
+  schools48bot-network:
+    name: schools48bot-network
+    driver: bridge
+    external: false

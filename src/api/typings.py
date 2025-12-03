@@ -1,46 +1,45 @@
-from dataclasses import dataclass, field
-from datetime import date, time
-from typing import List
+from pydantic import BaseModel, Field
+import datetime as dt
 
-@dataclass
-class File:
+
+class File(BaseModel):
     filename: str = ""
     link: str = ""
 
-@dataclass
-class Homework:
+
+class Homework(BaseModel):
     id: int = 0
     text: str = ""
     individual: bool = False
-    files: List[File] = field(default_factory=list)
+    files: list[File] = Field(default_factory=list)
 
-@dataclass
-class Lesson:
+
+class Lesson(BaseModel):
     name: str = ""
-    date: date = date(2000, 1, 1)
-    homeworks: List[Homework] = field(default_factory=list)
+    date: dt.date = dt.date(2000, 1, 1)
+    homeworks: list[Homework] = Field(default_factory=list)
     id: int = 0
     num: str = 0
     room: str = ""
     teacher: str = ""
     topic: str = ""
-    start: time | None = None
-    end: time | None = None
+    start: dt.time | None = None
+    end: dt.time | None = None
 
-@dataclass
-class Day:
-    date: date = date(2000, 1, 1)
+
+class Day(BaseModel):
+    date: dt.date = dt.date(2000, 1, 1)
     title: str = ""
-    lessons: List[Lesson] = field(default_factory=list)
+    lessons: list[Lesson] = Field(default_factory=list)
 
-@dataclass
-class Student:
+
+class Student(BaseModel):
     name: str = ""
     title: str = ""
-    days: List[Day] = field(default_factory=list)
+    days: list[Day] = Field(default_factory=list)
 
-@dataclass
-class Vendor:
+
+class Vendor(BaseModel):
     vendor_id: int = 0
     vendor_title: str = ""
     vendor: str = ""
@@ -48,3 +47,5 @@ class Vendor:
     user_title: str = ""
     expires: str = ""
     login: str = ""
+    student_name: str = ""
+    tg_id: int = 0
