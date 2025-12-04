@@ -1,5 +1,9 @@
+from typing import Any, Dict
 from pydantic import BaseModel, Field
 import datetime as dt
+
+
+Json = Dict[str, Any]
 
 
 class File(BaseModel):
