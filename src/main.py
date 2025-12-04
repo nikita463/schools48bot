@@ -4,6 +4,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.filters import Command
 from aiogram.types import Message
 
+from src.api import HTTPClient
 from src.updates import run_update_diary
 from src.utils import check_user
 from src.database import create_all
@@ -29,6 +30,7 @@ async def handle_start(message: Message):
 
 async def main():
     await create_all()
+    await HTTPClient.init()
 
     dp.include_router(diary_router)
     dp.include_router(homework_router)
